@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CONFIG>
+  <Compiler Value="D:\lazarus\fpc\3.2.2\bin\x86_64-win64\fpc.exe" Date="1449427374"/>
+  <Params Value=" -MObjFPC -Scghi -O1 -gw2 -godwarfsets -gl -l -vewnhibq -FiD:\TIAGO\program\workspace5\touhou-pascal\lib\x86_64-win64 -FlC:\Users\tiago\AppData\Local\lazarus\onlinepackagemanager\packages\Ray4Laz\libs\x86_64-win64 -FuC:\Users\tiago\AppData\Local\lazarus\onlinepackagemanager\packages\Ray4Laz\package\lib\x86_64-win64 -FuD:\lazarus\packager\units\x86_64-win64 -FuD:\TIAGO\program\workspace5\touhou-pascal\ -FUD:\TIAGO\program\workspace5\touhou-pascal\lib\x86_64-win64\ -FED:\TIAGO\program\workspace5\touhou-pascal\ -oD:\TIAGO\program\workspace5\touhou-pascal\game.exe game.lpr"/>
+</CONFIG>
