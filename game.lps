@@ -6,20 +6,13 @@
     <BuildModes Active="Default"/>
     <Units>
       <Unit>
-        <Filename Value="game.lpr"/>
+        <Filename Value="game.pas"/>
         <IsPartOfProject Value="True"/>
-        <CursorPos X="64" Y="33"/>
-        <UsageCount Value="27"/>
-        <Loaded Value="True"/>
-      </Unit>
-      <Unit>
-        <Filename Value="character.pas"/>
-        <UnitName Value="Character"/>
         <IsVisibleTab Value="True"/>
         <EditorIndex Value="2"/>
-        <TopLine Value="61"/>
-        <CursorPos X="71" Y="84"/>
-        <UsageCount Value="13"/>
+        <TopLine Value="44"/>
+        <CursorPos X="83" Y="73"/>
+        <UsageCount Value="28"/>
         <Loaded Value="True"/>
       </Unit>
       <Unit>
@@ -28,143 +21,170 @@
         <UnitName Value="Unit1"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="28" Y="20"/>
-        <UsageCount Value="26"/>
-      </Unit>
-      <Unit>
-        <Filename Value="C:\Users\tiago\AppData\Local\lazarus\onlinepackagemanager\packages\Ray4Laz\source\raylib.pas"/>
-        <EditorIndex Value="-1"/>
-        <CursorPos X="80" Y="328"/>
-        <UsageCount Value="11"/>
+        <UsageCount Value="35"/>
       </Unit>
       <Unit>
         <Filename Value="input.pas"/>
         <IsPartOfProject Value="True"/>
+        <TopLine Value="12"/>
+        <CursorPos X="15" Y="39"/>
+        <UsageCount Value="34"/>
+        <Loaded Value="True"/>
+      </Unit>
+      <Unit>
+        <Filename Value="game.lpr"/>
+        <EditorIndex Value="-1"/>
+        <CursorPos X="92"/>
+        <UsageCount Value="27"/>
+      </Unit>
+      <Unit>
+        <Filename Value="character.pas"/>
+        <UnitName Value="Character"/>
+        <EditorIndex Value="4"/>
+        <TopLine Value="56"/>
+        <CursorPos X="45" Y="62"/>
+        <UsageCount Value="17"/>
+        <Loaded Value="True"/>
+      </Unit>
+      <Unit>
+        <Filename Value="C:\Users\tiago\AppData\Local\lazarus\onlinepackagemanager\packages\Ray4Laz\source\raylib.pas"/>
+        <EditorIndex Value="3"/>
+        <TopLine Value="45"/>
+        <CursorPos X="3" Y="62"/>
+        <UsageCount Value="14"/>
+        <Loaded Value="True"/>
+      </Unit>
+      <Unit>
+        <Filename Value="bullet.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="Bullet"/>
         <EditorIndex Value="1"/>
-        <CursorPos X="22" Y="22"/>
-        <UsageCount Value="25"/>
+        <TopLine Value="35"/>
+        <CursorPos X="111" Y="55"/>
+        <UsageCount Value="27"/>
         <Loaded Value="True"/>
       </Unit>
     </Units>
     <JumpHistory HistoryIndex="29">
       <Position>
-        <Filename Value="character.pas"/>
-        <Caret Line="28" Column="56" TopLine="10"/>
+        <Filename Value="bullet.pas"/>
+        <Caret Line="75" Column="3" TopLine="58"/>
+      </Position>
+      <Position>
+        <Filename Value="bullet.pas"/>
+        <Caret Line="25" Column="62"/>
+      </Position>
+      <Position>
+        <Filename Value="bullet.pas"/>
+        <Caret Line="72" Column="84" TopLine="52"/>
+      </Position>
+      <Position>
+        <Filename Value="bullet.pas"/>
+        <Caret Line="77" Column="41" TopLine="55"/>
+      </Position>
+      <Position>
+        <Filename Value="bullet.pas"/>
+        <Caret Line="70" Column="113" TopLine="55"/>
+      </Position>
+      <Position>
+        <Filename Value="bullet.pas"/>
+        <Caret Line="83" Column="20" TopLine="64"/>
+      </Position>
+      <Position>
+        <Filename Value="bullet.pas"/>
+        <Caret Line="91" Column="101" TopLine="62"/>
+      </Position>
+      <Position>
+        <Filename Value="bullet.pas"/>
+        <Caret Line="95" Column="77" TopLine="67"/>
+      </Position>
+      <Position>
+        <Filename Value="bullet.pas"/>
+        <Caret Line="67" Column="87" TopLine="42"/>
+      </Position>
+      <Position>
+        <Filename Value="bullet.pas"/>
+        <Caret Line="120" Column="39" TopLine="102"/>
+      </Position>
+      <Position>
+        <Filename Value="bullet.pas"/>
+        <Caret Line="121" Column="89" TopLine="102"/>
+      </Position>
+      <Position>
+        <Filename Value="bullet.pas"/>
+        <Caret Line="24" Column="22" TopLine="10"/>
+      </Position>
+      <Position>
+        <Filename Value="bullet.pas"/>
+        <Caret Line="33" Column="30" TopLine="17"/>
+      </Position>
+      <Position>
+        <Filename Value="bullet.pas"/>
+        <Caret Line="120" Column="13" TopLine="103"/>
+      </Position>
+      <Position>
+        <Filename Value="bullet.pas"/>
+        <Caret Line="124" Column="120" TopLine="103"/>
+      </Position>
+      <Position>
+        <Filename Value="bullet.pas"/>
+        <Caret Line="120" Column="89" TopLine="103"/>
+      </Position>
+      <Position>
+        <Filename Value="bullet.pas"/>
+        <Caret Line="135" Column="100" TopLine="114"/>
+      </Position>
+      <Position>
+        <Filename Value="bullet.pas"/>
+        <Caret Line="110" Column="45" TopLine="93"/>
+      </Position>
+      <Position>
+        <Filename Value="bullet.pas"/>
+        <Caret Line="39" Column="48" TopLine="22"/>
+      </Position>
+      <Position>
+        <Filename Value="bullet.pas"/>
+        <Caret Line="109" Column="60" TopLine="84"/>
+      </Position>
+      <Position>
+        <Filename Value="bullet.pas"/>
+        <Caret Line="114" Column="91" TopLine="91"/>
+      </Position>
+      <Position>
+        <Filename Value="bullet.pas"/>
+        <Caret Line="96" Column="76" TopLine="77"/>
+      </Position>
+      <Position>
+        <Filename Value="bullet.pas"/>
+        <Caret Line="112" Column="56" TopLine="88"/>
+      </Position>
+      <Position>
+        <Filename Value="bullet.pas"/>
+        <Caret Line="110" Column="73" TopLine="88"/>
+      </Position>
+      <Position>
+        <Filename Value="bullet.pas"/>
+        <Caret Line="117" Column="92" TopLine="88"/>
+      </Position>
+      <Position>
+        <Filename Value="bullet.pas"/>
+        <Caret Line="105" Column="7" TopLine="88"/>
+      </Position>
+      <Position>
+        <Filename Value="game.pas"/>
+        <Caret Line="78" Column="52" TopLine="45"/>
+      </Position>
+      <Position>
+        <Filename Value="game.pas"/>
+        <Caret Line="62" Column="138" TopLine="45"/>
       </Position>
       <Position>
         <Filename Value="character.pas"/>
-        <Caret Line="40" Column="17" TopLine="22"/>
+        <Caret Line="88" Column="94" TopLine="59"/>
       </Position>
       <Position>
-        <Filename Value="character.pas"/>
-        <Caret Line="22" Column="32" TopLine="3"/>
-      </Position>
-      <Position>
-        <Filename Value="character.pas"/>
-        <Caret Line="40" Column="17" TopLine="23"/>
-      </Position>
-      <Position>
-        <Filename Value="character.pas"/>
-        <Caret Line="17" Column="40" TopLine="17"/>
-      </Position>
-      <Position>
-        <Filename Value="character.pas"/>
-        <Caret Line="40" Column="17" TopLine="23"/>
-      </Position>
-      <Position>
-        <Filename Value="character.pas"/>
-        <Caret Line="41" Column="70" TopLine="16"/>
-      </Position>
-      <Position>
-        <Filename Value="game.lpr"/>
-        <Caret Line="28" Column="25" TopLine="11"/>
-      </Position>
-      <Position>
-        <Filename Value="game.lpr"/>
-        <Caret Line="27" Column="84" TopLine="11"/>
-      </Position>
-      <Position>
-        <Filename Value="game.lpr"/>
-        <Caret Line="57" Column="49" TopLine="30"/>
-      </Position>
-      <Position>
-        <Filename Value="game.lpr"/>
-        <Caret Line="14" Column="68"/>
-      </Position>
-      <Position>
-        <Filename Value="game.lpr"/>
-        <Caret Line="61" Column="35" TopLine="37"/>
-      </Position>
-      <Position>
-        <Filename Value="character.pas"/>
-        <Caret Line="43" Column="19" TopLine="9"/>
-      </Position>
-      <Position>
-        <Filename Value="character.pas"/>
-        <Caret Line="32" Column="75" TopLine="9"/>
-      </Position>
-      <Position>
-        <Filename Value="character.pas"/>
-        <Caret Line="36" Column="43" TopLine="19"/>
-      </Position>
-      <Position>
-        <Filename Value="character.pas"/>
-        <Caret Line="42" Column="84" TopLine="19"/>
-      </Position>
-      <Position>
-        <Filename Value="character.pas"/>
-        <Caret Line="36" Column="43" TopLine="19"/>
-      </Position>
-      <Position>
-        <Filename Value="character.pas"/>
-        <Caret Line="45" Column="25" TopLine="28"/>
-      </Position>
-      <Position>
-        <Filename Value="character.pas"/>
-        <Caret Line="46" Column="51" TopLine="34"/>
-      </Position>
-      <Position>
-        <Filename Value="character.pas"/>
-        <Caret Line="57" Column="69" TopLine="29"/>
-      </Position>
-      <Position>
-        <Filename Value="character.pas"/>
-        <Caret Line="30" Column="84"/>
-      </Position>
-      <Position>
-        <Filename Value="character.pas"/>
-        <Caret Line="8" Column="28" TopLine="8"/>
-      </Position>
-      <Position>
-        <Filename Value="character.pas"/>
-        <Caret Line="78" Column="11" TopLine="61"/>
-      </Position>
-      <Position>
-        <Filename Value="character.pas"/>
-        <Caret Line="8" Column="30"/>
-      </Position>
-      <Position>
-        <Filename Value="character.pas"/>
-        <Caret Line="85" Column="57" TopLine="63"/>
-      </Position>
-      <Position>
-        <Filename Value="character.pas"/>
-        <Caret Line="90" Column="66" TopLine="63"/>
-      </Position>
-      <Position>
-        <Filename Value="character.pas"/>
-        <Caret Line="117" Column="33" TopLine="93"/>
-      </Position>
-      <Position>
-        <Filename Value="character.pas"/>
-        <Caret Line="123" Column="31" TopLine="93"/>
-      </Position>
-      <Position>
-        <Filename Value="character.pas"/>
-        <Caret Line="92" Column="58" TopLine="69"/>
-      </Position>
-      <Position>
-        <Filename Value="character.pas"/>
-        <Caret Line="86" Column="6" TopLine="69"/>
+        <Filename Value="bullet.pas"/>
+        <Caret Line="105" Column="7" TopLine="88"/>
       </Position>
     </JumpHistory>
     <RunParams>

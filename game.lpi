@@ -30,7 +30,7 @@
     </RequiredPackages>
     <Units>
       <Unit>
-        <Filename Value="game.lpr"/>
+        <Filename Value="game.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit>
       <Unit>
@@ -41,6 +41,11 @@
       <Unit>
         <Filename Value="input.pas"/>
         <IsPartOfProject Value="True"/>
+      </Unit>
+      <Unit>
+        <Filename Value="bullet.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="Bullet"/>
       </Unit>
     </Units>
   </ProjectOptions>

@@ -25,6 +25,11 @@ type
               collisionMask: TRectangle;
               size: Byte;
 
+              cPower: Integer;
+              cHP: Integer;
+              cBombs: Integer;
+              cScore: LongInt;
+
               procedure updateCollisionMask();
 
           public
@@ -32,6 +37,10 @@ type
             property Name: String read cName write cName;          
             property Sprite: TTexture read cSprite write cSprite;
             property Position: Point read cPosition write cPosition;
+
+            property HP: Integer read cHP write cHP;
+            property Bombs: Integer read cBombs write cBombs;
+            property Score: LongInt read cScore write cScore;
 
             constructor Create(n: String; s: Byte); overload;
             
@@ -64,6 +73,22 @@ begin
   (* Get the sprite image *)
   cSprite := LoadTexture('res/reimu.png');
 
+  cHP = 2;
+  cBombs = 2;
+
+end;
+
+function RectangleContains(r1, r2: TRectangle): Boolean;
+begin
+  
+  if (
+    ((r2.x + r2.width) < (r1.x + r1.width)) 
+    and (r2.x > r1.x) 
+    and (r2.y > r1.y) 
+    and ((r2.y + r2.height) < (r1.y + r1.height))
+  ) then
+    RectangleContains := true
+  else RectangleContains := false;
 end;
 
 procedure GameCharacter.updateCollisionMask();
@@ -78,19 +103,21 @@ var
   nextPosition: TRectangle;
 begin
 
-  nextPosition := RectangleCreate(cPosition.x + x * cMovingSpeed, cPosition.y + y * cMovingSpeed, size, size);
-  DrawRectangleRec(nextPosition, BLUE);
+  nextPosition := RectangleCreate(cPosition.x + x * cMovingSpeed, cPosition.y, size, size);
 
   (* Check for outside collision *)
 
-  if RectangleConatains(nextPosition, playingField) then
+  if RectangleContains(playingField, nextPosition) then
   begin
-    
     cPosition.x := cPosition.x + x * cMovingSpeed;
-    cPosition.y := cPosition.y + y * cMovingSpeed;
+    updateCollisionMask();  
+  end;
 
-    updateCollisionMask();
-    
+  nextPosition := RectangleCreate(cPosition.x, cPosition.y + y * cMovingSpeed, size, size);
+  if RectangleContains(playingField, nextPosition) then
+  begin
+    cPosition.y := cPosition.y + y * cMovingSpeed;
+    updateCollisionMask();  
   end;
 
 end;
@@ -111,17 +138,5 @@ begin
   getCollisionMask := collisionMask;
 end;
 
-function RectangleConatains(r1, r2: TRectangle): Boolean;
-begin
-  
-  if (
-    ((r2.x + r2.width) < (r1.x + r1.width)) 
-    and (r2.x > r1.x) 
-    and (r2.y > r1.y) 
-    and ((r2.y + r2.height) < (r1.y + r1.height))
-  ) then
-    RectangleConatains := true;
-  else RectangleConatains := false;
-end;
 
 end.

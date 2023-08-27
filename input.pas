@@ -5,7 +5,7 @@ unit input;
 interface
 
 uses
-  Classes, SysUtils, Character, raylib;
+  Classes, SysUtils, Character, Bullet, raylib;
 
 var
   LEFT: Integer = KEY_LEFT;
@@ -13,11 +13,13 @@ var
   UP: Integer = KEY_UP;
   DOWN: Integer = KEY_DOWN;
 
-procedure Update(player: GameCharacter);
+  SHOOT: Integer = KEY_Z;
+
+procedure Update(var player: GameCharacter; var showCollision: Boolean);
 
 implementation
 
-procedure Update(player: GameCharacter);
+procedure Update(var player: GameCharacter; var showCollision: Boolean);
 var
   moveX: Integer = 0;
   moveY: Integer = 0;
@@ -33,6 +35,10 @@ begin
 
   (* Update player position *)
   player.moveInDirection(moveX, moveY);
+
+  showCollision := IsKeyDown(KEY_LEFT_SHIFT);
+
+  if IsKeyDown(SHOOT) then CreateBullet(player);
 
 end;
 

@@ -17,13 +17,18 @@ type
           private
 
               cName: String;
-              cMovingSpeed, cAttackRange, cAttackPower: Integer;
+              cAttackRange, cAttackPower: Integer;
 
               cPosition: Point;
               cSprite: TTexture;
 
               collisionMask: TRectangle;
               size: Byte;
+
+              cMovingSpeed, cPower: Real;
+              cHP: Integer;
+              cBombs: Integer;
+              cScore: LongInt;
 
               procedure updateCollisionMask();
 
@@ -32,6 +37,11 @@ type
             property Name: String read cName write cName;          
             property Sprite: TTexture read cSprite write cSprite;
             property Position: Point read cPosition write cPosition;
+
+            property HP: Integer read cHP write cHP;
+            property Bombs: Integer read cBombs write cBombs;
+            property Score: LongInt read cScore write cScore;
+            property Power: Real read cPower write cPower;
 
             constructor Create(n: String; s: Byte); overload;
             
@@ -47,6 +57,8 @@ const
 
   playingField: TRectangle = (x: 35; y: 15; width: 400; height: 570);
 
+  playerSize: Byte = 48;
+
 implementation
 
 constructor GameCharacter.Create(n: String; s: Byte);
@@ -58,11 +70,16 @@ begin
 
   collisionMask := RectangleCreate(cPosition.x, cPosition.y, collisionSize, collisionSize);
 
-  cMovingSpeed := 3;
+  cMovingSpeed := 4.2;
   size := s;
 
   (* Get the sprite image *)
   cSprite := LoadTexture('res/reimu.png');
+
+  cHP := 3;
+  cBombs := 3;
+  cPower := 0;
+  cScore := 0;
 
 end;
 
