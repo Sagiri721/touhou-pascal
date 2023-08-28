@@ -17,7 +17,7 @@ type
           private
 
               cName: String;
-              cMovingSpeed, cAttackRange, cAttackPower: Integer;
+              cAttackRange, cAttackPower: Integer;
 
               cPosition: Point;
               cSprite: TTexture;
@@ -25,7 +25,7 @@ type
               collisionMask: TRectangle;
               size: Byte;
 
-              cPower: Integer;
+              cOriginSpeed, cMovingSpeed, cPower: Real;
               cHP: Integer;
               cBombs: Integer;
               cScore: LongInt;
@@ -41,22 +41,41 @@ type
             property HP: Integer read cHP write cHP;
             property Bombs: Integer read cBombs write cBombs;
             property Score: LongInt read cScore write cScore;
+            property Power: Real read cPower write cPower;
 
             constructor Create(n: String; s: Byte); overload;
             
             procedure moveInDirection(x, y: Integer);
             procedure setPosition(x, y: Integer);
 
+            procedure focus();
+            procedure stopFocus();
+
             function getCollisionMask(): TRectangle;
   end;
 
 const
   collisionSize: Integer = 10;
-  collisionOffset: Point = (x: 0; y:10);
+  collisionOffset: Point = (x: 0; y:10);                                                                    '
 
   playingField: TRectangle = (x: 35; y: 15; width: 400; height: 570);
 
+  playerSize: Byte = 48;
+
+  function PointCreate(x, y: Real): Point;
+
 implementation
+
+function PointCreate(x, y: Real) : Point;
+var
+  newPoint: Point;
+begin
+  
+  newPoint.x := x;
+  newPoint.y := y;
+
+  PointCreate := newPoint;
+end;
 
 constructor GameCharacter.Create(n: String; s: Byte);
 begin
@@ -67,14 +86,18 @@ begin
 
   collisionMask := RectangleCreate(cPosition.x, cPosition.y, collisionSize, collisionSize);
 
-  cMovingSpeed := 3;
+  cOriginSpeed := 4.2;
+  cMovingSpeed := cOriginSpeed;
+
   size := s;
 
   (* Get the sprite image *)
   cSprite := LoadTexture('res/reimu.png');
 
-  cHP = 2;
-  cBombs = 2;
+  cHP := 3;
+  cBombs := 3;
+  cPower := 0;
+  cScore := 0;
 
 end;
 
@@ -138,5 +161,14 @@ begin
   getCollisionMask := collisionMask;
 end;
 
+procedure GameCharacter.focus();
+begin
+  cMovingSpeed := cOriginSpeed / 2.6;
+end;
+
+procedure GameCharacter.stopFocus();
+begin
+  cMovingSpeed := cOriginSpeed;
+end;
 
 end.

@@ -25,7 +25,7 @@ type
               collisionMask: TRectangle;
               size: Byte;
 
-              cMovingSpeed, cPower: Real;
+              cOriginSpeed, cMovingSpeed, cPower: Real;
               cHP: Integer;
               cBombs: Integer;
               cScore: LongInt;
@@ -48,6 +48,9 @@ type
             procedure moveInDirection(x, y: Integer);
             procedure setPosition(x, y: Integer);
 
+            procedure focus();
+            procedure stopFocus();
+
             function getCollisionMask(): TRectangle;
   end;
 
@@ -59,7 +62,21 @@ const
 
   playerSize: Byte = 48;
 
+  function PointCreate(x, y: Real): Point;
+  function RectangleContains(r1, r2: TRectangle): Boolean;
+
 implementation
+
+function PointCreate(x, y: Real) : Point;
+var
+  newPoint: Point;
+begin
+  
+  newPoint.x := x;
+  newPoint.y := y;
+
+  PointCreate := newPoint;
+end;
 
 constructor GameCharacter.Create(n: String; s: Byte);
 begin
@@ -70,7 +87,9 @@ begin
 
   collisionMask := RectangleCreate(cPosition.x, cPosition.y, collisionSize, collisionSize);
 
-  cMovingSpeed := 4.2;
+  cOriginSpeed := 4.2;
+  cMovingSpeed := cOriginSpeed;
+
   size := s;
 
   (* Get the sprite image *)
@@ -143,5 +162,14 @@ begin
   getCollisionMask := collisionMask;
 end;
 
+procedure GameCharacter.focus();
+begin
+  cMovingSpeed := cOriginSpeed / 2.6;
+end;
+
+procedure GameCharacter.stopFocus();
+begin
+  cMovingSpeed := cOriginSpeed;
+end;
 
 end.

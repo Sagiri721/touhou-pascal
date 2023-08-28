@@ -47,6 +47,11 @@
         <IsPartOfProject Value="True"/>
         <UnitName Value="Bullet"/>
       </Unit>
+      <Unit>
+        <Filename Value="enemy.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="Enemy"/>
+      </Unit>
     </Units>
   </ProjectOptions>
   <CompilerOptions>

@@ -37,8 +37,12 @@ begin
   player.moveInDirection(moveX, moveY);
 
   showCollision := IsKeyDown(KEY_LEFT_SHIFT);
+  if showCollision then
+  begin
+    player.focus();
+  end else player.stopFocus();
 
-  if IsKeyDown(SHOOT) then CreateBullet(player);
+  if IsKeyDown(SHOOT) then CreateBullet(player, 0);
 
 end;
 
