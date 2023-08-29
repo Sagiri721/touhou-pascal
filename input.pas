@@ -42,7 +42,7 @@ begin
     player.focus();
   end else player.stopFocus();
 
-  if IsKeyDown(SHOOT) then CreateBullet(player, 0);
+  if IsKeyDown(SHOOT) then CreateBullet(player);
 
 end;
 

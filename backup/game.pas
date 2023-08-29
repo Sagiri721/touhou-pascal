@@ -8,7 +8,8 @@ Character,
 raylib,
 input,
 SysUtils,
-Bullet;
+Bullet, 
+Enemy;
 
 const
   screenWidth: Integer = 800;
@@ -44,13 +45,15 @@ var
     sizeAnim := 0;
     rotateAnim := 0;
 
+    enemyManager := TEList.Create;
+
   end;
 
   procedure drawPlayer();
   var
     source: TRectangle; 
     dest: TRectangle;
-    vec: TVector2;
+    
   begin
     
     source := RectangleCreate(0,0, 32, 32);
@@ -82,6 +85,9 @@ begin
 
   getGraphics();
 
+  CreateEnemy(1, PointCreate(70, 70));
+  CreateEnemy(1, PointCreate(playingField.x + playingField.width - 80, 70));
+
   showCollision := false;
 
   // Main game loop
@@ -95,6 +101,11 @@ begin
         (*Input update*)
         Update(player, showCollision);
         drawBullets();
+        DrawEnemies();
+
+        DrawRectangle(0, 0, round(playingField.x), screenHeight, BLACK);
+        DrawRectangle(round(playingField.x + playingField.width), 0, 100, screenHeight, BLACK);
+
         drawPlayer();
 
         DrawText('HiScore  ', round(playingField.width + playingField.x + 20),  40, 20, WHITE);

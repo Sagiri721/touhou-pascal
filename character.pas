@@ -64,6 +64,10 @@ const
 
   function PointCreate(x, y: Real): Point;
   function RectangleContains(r1, r2: TRectangle): Boolean;
+  function GetPlayerPosition() : Point;
+
+var
+  player: GameCharacter;
 
 implementation
 
@@ -99,6 +103,8 @@ begin
   cBombs := 3;
   cPower := 0;
   cScore := 0;
+
+  player := self;
 
 end;
 
@@ -170,6 +176,11 @@ end;
 procedure GameCharacter.stopFocus();
 begin
   cMovingSpeed := cOriginSpeed;
+end;
+
+function GetPlayerPosition() : Point;
+begin
+  GetPlayerPosition := player.position;
 end;
 
 end.

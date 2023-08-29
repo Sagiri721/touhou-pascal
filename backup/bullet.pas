@@ -9,11 +9,35 @@ uses
 
 type 
 
-  PTrail = ^Trail;
-  Trail = record
+  Trail = class(TOBject)
     
-    pos: Point;
-    opacity: Real;
+    private
+      position: Point;
+      op: Real;
+      tImage: TTexture;
+
+    public 
+
+      t: Integer;
+      constructor Create(pos: Point); overload;
+      
+      property Pos: Point read position write position;
+      property opacity: Real read op write op;
+      property Image: TTexture read tImage write tImage;
+
+      procedure fade(); virtual;
+  end;
+
+  DeathTrail = class(Trail)
+
+    public
+      size: Real;
+      color: TColorB;
+      varRotation: Real;
+      
+      constructor Create(elPosicion: Point; overlay: TColorB); overload;
+      procedure fade; override;
+
   end;
 
   GameBullet = class(TOBject)
@@ -29,10 +53,14 @@ type
 
       bOrigin: GameCharacter;
       bColor: TColorB;
+
+      bDamage: Real;
       
     public
 
       constructor Create(var origin: GameCharacter); overload;
+      constructor Create(origin: Point); overload;
+
       function moveBullet() : Boolean;
       procedure retreat();
       procedure twitch();
@@ -40,26 +68,73 @@ type
       property Position: Point read bPosition write bPosition;
       property Color: TColorB read bColor write bColor;
       property Side: Integer read bSide write bSide;
+      property Damage: Real read bDamage write bDamage;
 
   end;
 
   TBList = specialize TFPGObjectList<GameBullet>;
   TBulletPointerList = specialize TFPGList<Integer>;
-  TTrailList = specialize TFPGList<PTrail>;
+  TTrailList = specialize TFPGObjectList<Trail>;
 
 var 
 
-  bulletSprite, shotTrail: TTexture;
+  deathEffectColorsVariation: array[0..3] of TColor;
+  bulletSprite, shotTrail, deathCircle: TTexture;
   bulletManager: TBList;
   trailList: TTrailList;
 
+  hours, mins, secs, milliSecs : Word;
+
   procedure drawBullets();
   procedure loadBullet();
+  
   procedure CreateBullet(var player: GameCharacter; side: Integer);
+  procedure CreateBullet(var origin: Point);
+
+  procedure StartDeathEffect(position: Point);
+  procedure resetRandomSeed();
 
 implementation
 
 uses Enemy;
+
+constructor Trail.Create(pos: Point);
+begin
+  
+  position := pos;
+  position.x += GetRandomValue(-16, 16);
+  position.y -= 32;
+
+  tImage := shotTrail;
+
+  op := 1;
+  t := 0;
+end;
+
+constructor DeathTrail.Create(elPosicion: Point; overlay: TColorB);
+begin
+  
+  position := elPosicion;
+  tImage := deathCircle;
+
+  op := 1;
+  color := overlay;
+  size := 0.1;
+
+  t := 1;
+
+  resetRandomSeed();
+  varRotation := GetRandomValue(0, 360);
+  
+end;
+
+procedure Trail.fade();
+begin
+  
+  op -= 0.03;
+  position.y -= 0.8;
+
+end;
 
 constructor GameBullet.Create(var origin: GameCharacter);
 begin
@@ -77,6 +152,23 @@ begin
   bPointer := bulletManager.Count;
   bColor := WHITE;
 
+  bDamage := 1;
+
+end;
+
+constructor GameBullet.Create(origin: Point);
+begin
+  
+  bOrigin := nil;
+  bPosition := origin;
+  
+  bSpeed := 8;
+  bAngle := 0;
+  bDirection := 1;
+
+  bColor := RED;
+  bDamage := 1;
+
 end;
 
 procedure loadBullet();
@@ -84,9 +176,15 @@ begin
   
   bulletSprite := LoadTexture('res/bullets/bullet.png');
   shotTrail := LoadTexture('res/bullets/shot-trail.png');
+  deathCircle := LoadTexture('res/enemies/death-circle.png');
 
   bulletManager := TBList.Create;
   trailList := TTrailList.Create;
+
+  deathEffectColorsVariation[0] := RED;
+  deathEffectColorsVariation[1] := GREEN;
+  deathEffectColorsVariation[2] := BLUE;
+  deathEffectColorsVariation[3] := YELLOW;
 
 end;
 
@@ -102,21 +200,73 @@ begin
 
 end;
 
+procedure CreateBullet(var origin: Point);
+var
+  newBullet: GameBullet;
+begin
+  
+  newBullet := GameBullet.Create(origin);
+  bulletManager.Add(newBullet);
+
+end;
+
 procedure drawBullets();
 var 
   i: Integer;
   scheduleDeletion: Boolean;
-  leftTrail: Trail;
+  convert: DeathTrail;
+
 begin
   
   i := 0;
 
-  for i := 0 to trailList.Count do
+  while i < trailList.Count do
   begin
+
+    if trailList[i].t = 0 then
+    begin
+      
+      DrawTextureEx(trailList[i].image, Vector2Create(trailList[i].pos.x, trailList[i].pos.y), 0, 2, ColorCreate(255, 255, 255, round(255 * trailList[i].opacity)));
+    end
+    else
+    begin
+      
+      convert := DeathTrail(trailList[i]);
+      DrawTexturePro(
+        convert.image, 
+        RectangleCreate(0,0,64,64),
+        RectangleCreate(convert.pos.x, convert.pos.y, 64 * convert.size, 64 * convert.size),
+        Vector2Create(32 * convert.size, 32 * convert.size),
+        0, 
+        ColorCreate(convert.color.r, convert.color.g, convert.color.b, round(255 * convert.opacity))
+      );
+
+      (* Draw variation circle *)
+
+      DrawTexturePro(
+        convert.image, 
+        RectangleCreate(0,0,64,64),
+        RectangleCreate(convert.pos.x, convert.pos.y, 64 * convert.size, 64),
+        Vector2Create(32 * convert.size, 32),
+        convert.varRotation, 
+        ColorCreate(convert.color.r, convert.color.g, convert.color.b, round(255 * convert.opacity))
+      );
+
+    end;
     
-    DrawTexture(shotTrail, round(trailList[i]^.pos.x), round(trailList[i]^.pos.y), ColorCreate(255, 255, 255, round(255 * trailList[i]^.opacity)));
-    trailList[i]^.opacity -= 0.1;
+    trailList[i].fade();
+
+    if(trailList[i].opacity <= 0) then
+    begin
+      trailList.Delete(i);
+      i -= 1;
+    end;
+
+    i += 1;
+
   end;
+
+  i := 0;
 
   while i < bulletManager.Count do
   begin
@@ -126,14 +276,16 @@ begin
 
     bulletManager[i].twitch();
     (* Check for enemy collision *)
-    if AssertEnemyCollision(bulletManager[i]) then scheduleDeletion := true;
+    if AssertEnemyCollision(bulletManager[i]) then 
+    begin
+
+      trailList.Add(Trail.Create(bulletManager[i].Position));
+      scheduleDeletion := true;
+
+    end;
     if scheduleDeletion then 
     begin
     
-      leftTrail.pos := bulletManager[i].Position;
-      leftTrail.opacity := 1;
-
-      trailList.Add(^leftTrail);
       bulletManager.Delete(i);
 
       i -= 1;
@@ -149,8 +301,6 @@ begin
 end;
 
 function GameBullet.moveBullet() : Boolean;
-var
-  i: Integer;
 begin
   
   bPosition.x := bPosition.x + bAngle;
@@ -172,6 +322,35 @@ begin
     bColor := ColorCreate(255, 255, 255, 100);
   end
   else bColor := WHITE;
+end;
+
+procedure DeathTrail.fade();
+begin
+  
+  size += 0.2;
+  op -= 0.04;
+end;
+
+procedure StartDeathEffect(position: Point);
+var
+  deathEffect: DeathTrail;
+begin
+  
+  resetRandomSeed();
+  deathEffect := DeathTrail.Create(position, deathEffectColorsVariation[GetRandomValue(0, length(deathEffectColorsVariation))]);
+  deathEffect.pos := PointCreate(
+    deathEffect.pos.x + 21,
+    deathEffect.pos.y + 21
+  );
+
+  trailList.Add(deathEffect);
+
+end;
+
+procedure resetRandomSeed();
+begin
+  DecodeTime(now, hours, mins, secs, milliSecs);
+  SetRandomSeed(milliSecs);
 end;
 
 end.

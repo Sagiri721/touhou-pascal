@@ -10,7 +10,7 @@ interface
 }
 
 uses
-  Classes, SysUtils, raylib, fgl, Character, Bullet;
+  Classes, SysUtils, raylib, fgl, Character, Bullet, SpellCard;
 
 type
 
@@ -31,11 +31,15 @@ type
       drawColor: TColorB;
 
     public
+      attack: GameSpellCard;
+      attackTimer: Integer;
+      attackTreshold: Integer;
 
       constructor Create(i: Integer; target: Point); overload;
 
       procedure moveToTarget();
       procedure setTargetPosition(pos: Point);
+      procedure hurt(damage: Real);
 
       procedure wave();
 
@@ -74,15 +78,6 @@ end;
 constructor GameEnemy.Create(i: Integer; target: Point);
 begin
   
-  case i of
-    1: begin
-
-      enemySprite := LoadTexture('res/enemies/fairy.png');
-      hp := 120;
-      size := 1.3;
-      
-    end;
-  end;
 
   setTargetPosition(target);
 
@@ -96,10 +91,28 @@ begin
     ePosition.x := playingField.x + playingField.width + 10;
     ePosition.y := 0;
   end;
+  case i of
+    1: begin
+
+      enemySprite := LoadTexture('res/enemies/fairy.png');
+      hp := 120;
+      size := 1.3;
+
+      attackTreshold := 60 * 3;
+      attack := GameSpellCard.Create(0, eTargetPosition);
+      
+    end;
+  end;
 
   speed := 3;
 
   eCollisionMask := RectangleCreate(ePosition.x, ePosition.y, 32 * eSize, 32 * eSize);
+end;
+
+procedure GameEnemy.hurt(damage: Real);
+begin
+  
+  hp -= damage;
 end;
 
 procedure DrawEnemies();
@@ -107,7 +120,8 @@ var
   i: Integer;
 begin
   
-  for i := 0 to enemyManager.Count - 1 do
+  i := 0;
+  while i < enemyManager.Count do
   begin
 
     DrawTextureEx(enemyManager[i].enemySprite, Vector2Create(enemyManager[i].position.x, enemyManager[i].position.y), 0, enemyManager[i].Size
@@ -122,6 +136,27 @@ begin
     enemyManager[i].wave();
     if not enemyManager[i].reached then enemyManager[i].moveToTarget();
 
+    (* Delete killed enemies *)
+    if enemyManager[i].hp <= 0 then
+    begin
+
+      StartDeathEffect(enemyManager[i].position);
+      enemyManager.Delete(i);
+      i -= 1;
+    end
+    else
+    begin      
+      (* Process spell card *)
+      if enemyManager[i].attackTimer > enemyManager[i].attackTreshold then 
+      begin
+        
+        enemyManager[i].attack.Start();
+      end;
+
+      enemyManager[i].attackTimer += 1;
+    end;
+
+    i += 1;
   end;
 
 end;
@@ -178,10 +213,13 @@ begin
   for i:= 0 to enemyManager.Count - 1 do
   begin
     
-    if CheckCollisionRecs(bulletMask, enemyManager[i].collisionMask) then
+    if (CheckCollisionRecs(bulletMask, enemyManager[i].collisionMask) and (bullet.Side = 0)) then
     begin
       
       res := true;
+      (* Deal damage *)
+      enemyManager[i].hurt(bullet.Damage);
+
       if enemyManager[i].Color.a = 255 then enemyManager[i].Color := ColorCreate(enemyManager[i].Color.r, enemyManager[i].Color.g, enemyManager[i].Color.b, 100);
       break;
     end;

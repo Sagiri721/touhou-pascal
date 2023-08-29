@@ -52,6 +52,11 @@
         <IsPartOfProject Value="True"/>
         <UnitName Value="Enemy"/>
       </Unit>
+      <Unit>
+        <Filename Value="spellcard.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="SpellCard"/>
+      </Unit>
     </Units>
   </ProjectOptions>
   <CompilerOptions>
