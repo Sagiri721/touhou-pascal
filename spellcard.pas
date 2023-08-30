@@ -37,7 +37,7 @@ begin
   origin.x := origin.x + 13;
   origin.y := origin.y + 13;
 
-  delay := 5;
+  delay := 8;
   counter := 0;
   
 end;
@@ -48,16 +48,22 @@ var
   angle, c: Real;
 begin
 
-  player := GetPlayerPosition();
+  case id of
+    0:
+    begin
 
-  if counter > delay then
-  begin
-    
-    resetRandomSeed();
-    c := ((player.x - origin.x) / abs(player.y - origin.y)) * 7;
-    CreateBullet(origin, 7, c + GetRandomValue(-5, 5));
+      player := GetPlayerPosition();
 
-    counter := 0;
+      if counter > delay then
+      begin
+        
+        resetRandomSeed();
+        c := ((player.x - origin.x) / abs(player.y - origin.y)) * 7;
+        CreateBullet(origin, 7, c + GetRandomValue(-3, 3));
+
+        counter := 0;
+      end;
+    end;
   end;
 
  counter += 1;

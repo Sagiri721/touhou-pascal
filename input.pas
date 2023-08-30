@@ -1,4 +1,4 @@
-unit input;
+unit Input;
 
 {$mode ObjFPC}{$H+}
 

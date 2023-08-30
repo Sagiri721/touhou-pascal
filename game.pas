@@ -9,7 +9,8 @@ raylib,
 input,
 SysUtils,
 Bullet, 
-Enemy;
+Enemy, 
+Items;
 
 const
   screenWidth: Integer = 800;

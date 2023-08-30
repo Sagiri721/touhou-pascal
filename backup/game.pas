@@ -6,10 +6,11 @@ uses
 cmem,
 Character,
 raylib,
-input,
+Input,
 SysUtils,
 Bullet, 
-Enemy;
+Enemy
+Items;
 
 const
   screenWidth: Integer = 800;
@@ -41,6 +42,7 @@ var
     );
 
     loadBullet();
+    loadItemSprites();
 
     sizeAnim := 0;
     rotateAnim := 0;

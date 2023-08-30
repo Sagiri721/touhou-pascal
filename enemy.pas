@@ -23,7 +23,7 @@ type
       hp, speed, waveIndex, eSize: Real;
 
       ePosition: Point;
-      eTargetPosition, step: Point;
+      eTargetPosition, step, originPosition: Point;
 
       eReached: Boolean;
       eCollisionMask: TRectangle;
@@ -34,6 +34,9 @@ type
       attack: GameSpellCard;
       attackTimer: Integer;
       attackTreshold: Integer;
+      attackEnd: Integer;
+
+      deleteMe: Boolean;
 
       constructor Create(i: Integer; target: Point); overload;
 
@@ -78,7 +81,7 @@ end;
 constructor GameEnemy.Create(i: Integer; target: Point);
 begin
   
-
+  deleteMe := false;
   setTargetPosition(target);
 
   if eTargetPosition.x < (playingField.x + playingField.width / 2) then 
@@ -91,6 +94,8 @@ begin
     ePosition.x := playingField.x + playingField.width + 10;
     ePosition.y := 0;
   end;
+  
+  originPosition := ePosition;
   case i of
     1: begin
 
@@ -100,6 +105,8 @@ begin
 
       attackTreshold := 60 * 3;
       attack := GameSpellCard.Create(0, eTargetPosition);
+
+      attackEnd := 60 * 5;
       
     end;
   end;
@@ -137,10 +144,10 @@ begin
     if not enemyManager[i].reached then enemyManager[i].moveToTarget();
 
     (* Delete killed enemies *)
-    if enemyManager[i].hp <= 0 then
+    if (enemyManager[i].hp <= 0) or enemyManager[i].deleteMe then
     begin
 
-      StartDeathEffect(enemyManager[i].position);
+      if not enemyManager[i].deleteMe then StartDeathEffect(enemyManager[i].position);
       enemyManager.Delete(i);
       i -= 1;
     end
@@ -150,7 +157,15 @@ begin
       if enemyManager[i].attackTimer > enemyManager[i].attackTreshold then 
       begin
         
-        enemyManager[i].attack.Start();
+        if enemyManager[i].attackTimer > (enemyManager[i].attackTreshold + enemyManager[i].attackEnd) then
+        begin
+          if enemyManager[i].attackTimer > (enemyManager[i].attackTreshold + enemyManager[i].attackEnd + enemyManager[i].attackTreshold) then
+          begin
+            enemyManager[i].Reached := false;
+            enemyManager[i].setTargetPosition(enemyManager[i].originPosition);
+          end;
+        end
+        else enemyManager[i].attack.Start();
       end;
 
       enemyManager[i].attackTimer += 1;
@@ -174,6 +189,8 @@ begin
   step.y := (pos.y - ePosition.y) / magnitude;
 
   if magnitude < 2 then eReached := true;
+
+  if eReached and ((originPosition.x = eTargetPosition.x) and (originPosition.y = eTargetPosition.y)) then deleteMe := true;
 
 end;
 

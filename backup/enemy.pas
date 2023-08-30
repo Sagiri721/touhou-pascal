@@ -10,36 +10,9 @@ interface
 }
 
 uses
-  Classes, SysUtils, raylib, fgl, Character;
+  Classes, SysUtils, raylib, fgl, Character, Bullet, SpellCard;
 
 type
-
-  GameBullet = class(TOBject)
-
-    private
-
-      bPosition: Point;
-      bSpeed: Real;
-      bAngle: Real;
-      bDirection, bSide: Integer;
-
-      bPointer: Integer;
-
-      bOrigin: GameCharacter;
-      bColor: TColorB;
-      
-    public
-
-      constructor Create(var origin: GameCharacter); overload;
-      function moveBullet() : Boolean;
-      procedure retreat();
-      procedure twitch();
-
-      property Position: Point read bPosition write bPosition;
-      property Color: TColorB read bColor write bColor;
-      property Side: Integer read bSide write bSide;
-
-  end;
 
   GameEnemy = class(TOBject)
 
@@ -50,17 +23,24 @@ type
       hp, speed, waveIndex, eSize: Real;
 
       ePosition: Point;
-      eTargetPosition, step: Point;
+      eTargetPosition, step, originPosition: Point;
 
       eReached: Boolean;
       eCollisionMask: TRectangle;
 
+      drawColor: TColorB;
+
     public
+      attack: GameSpellCard;
+      attackTimer: Integer;
+      attackTreshold: Integer;
+      attackEnd: Integer;
 
       constructor Create(i: Integer; target: Point); overload;
 
       procedure moveToTarget();
       procedure setTargetPosition(pos: Point);
+      procedure hurt(damage: Real);
 
       procedure wave();
 
@@ -69,6 +49,7 @@ type
       property Reached: Boolean read eReached write eReached;
       property Size: Real read eSize write eSize;
       property CollisionMask: TRectangle read eCollisionMask write eCollisionMask;
+      property Color: TColorB read drawColor write drawColor;
     
   end;
 
@@ -90,7 +71,7 @@ var
 begin
   
   newEnemy := GameEnemy.Create(id, targetPosition);
-
+  newEnemy.Color := WHITE;
   enemyManager.Add(newEnemy);
 
 end;
@@ -98,16 +79,6 @@ end;
 constructor GameEnemy.Create(i: Integer; target: Point);
 begin
   
-  case i of
-    1: begin
-
-      enemySprite := LoadTexture('res/enemies/fairy.png');
-      hp := 120;
-      size := 1.3;
-      
-    end;
-  end;
-
   setTargetPosition(target);
 
   if eTargetPosition.x < (playingField.x + playingField.width / 2) then 
@@ -120,10 +91,32 @@ begin
     ePosition.x := playingField.x + playingField.width + 10;
     ePosition.y := 0;
   end;
+  
+  originPosition := ePosition;
+  case i of
+    1: begin
+
+      enemySprite := LoadTexture('res/enemies/fairy.png');
+      hp := 120;
+      size := 1.3;
+
+      attackTreshold := 60 * 3;
+      attack := GameSpellCard.Create(0, eTargetPosition);
+
+      attackEnd := 60 * 5;
+      
+    end;
+  end;
 
   speed := 3;
 
   eCollisionMask := RectangleCreate(ePosition.x, ePosition.y, 32 * eSize, 32 * eSize);
+end;
+
+procedure GameEnemy.hurt(damage: Real);
+begin
+  
+  hp -= damage;
 end;
 
 procedure DrawEnemies();
@@ -131,15 +124,48 @@ var
   i: Integer;
 begin
   
-  for i := 0 to enemyManager.Count - 1 do
+  i := 0;
+  while i < enemyManager.Count do
   begin
 
     DrawTextureEx(enemyManager[i].enemySprite, Vector2Create(enemyManager[i].position.x, enemyManager[i].position.y), 0, enemyManager[i].Size
-    , WHITE);
+    , enemyManager[i].Color);
+
+    if enemyManager[i].Color.a = 100 then 
+    begin
+      
+      enemyManager[i].Color := ColorCreate(enemyManager[i].Color.r, enemyManager[i].Color.g, enemyManager[i].Color.b, 255);
+    end;
 
     enemyManager[i].wave();
     if not enemyManager[i].reached then enemyManager[i].moveToTarget();
 
+    (* Delete killed enemies *)
+    if enemyManager[i].hp <= 0 then
+    begin
+
+      StartDeathEffect(enemyManager[i].position);
+      enemyManager.Delete(i);
+      i -= 1;
+    end
+    else
+    begin      
+      (* Process spell card *)
+      if enemyManager[i].attackTimer > enemyManager[i].attackTreshold then 
+      begin
+        
+        if enemyManager[i].attackTimer > (enemyManager[i].attackTreshold + enemyManager[i].attackEnd) then
+        begin
+          enemyManager[i].targetPosition := enemyManager[i].originPosition;
+          enemyManager[i].Reached := false;
+        end
+        else enemyManager[i].attack.Start();
+      end;
+
+      enemyManager[i].attackTimer += 1;
+    end;
+
+    i += 1;
   end;
 
 end;
@@ -187,21 +213,28 @@ function AssertEnemyCollision(bullet: GameBullet) : Boolean;
 var 
   i: Integer;
   bulletMask: TRectangle;
+  res: Boolean;
 begin
   
+  res := false;
   bulletMask := RectangleCreate(bullet.Position.x, bullet.Position.y, 16, 16);
 
   for i:= 0 to enemyManager.Count - 1 do
   begin
     
-    if CheckCollisionRecs(bulletMask, enemyManager[i].collisionMask) then
+    if (CheckCollisionRecs(bulletMask, enemyManager[i].collisionMask) and (bullet.Side = 0)) then
     begin
       
-      AssertEnemyCollision := true;
+      res := true;
+      (* Deal damage *)
+      enemyManager[i].hurt(bullet.Damage);
+
+      if enemyManager[i].Color.a = 255 then enemyManager[i].Color := ColorCreate(enemyManager[i].Color.r, enemyManager[i].Color.g, enemyManager[i].Color.b, 100);
+      break;
     end;
   end;
 
-  AssertEnemyCollision := false;
+  AssertEnemyCollision := res;
 end;
 
 end.

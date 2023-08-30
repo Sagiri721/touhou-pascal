@@ -307,11 +307,11 @@ begin
   bPosition.x := bPosition.x + bAngle;
   bPosition.y := bPosition.y + bSpeed * bDirection;
 
-  if((bPosition.y < 10) or (bPosition.y > playingField.height)) then
+  if (bPosition.y < 10) or (bPosition.y > (playingField.height + 16)) or (bPosition.x < playingField.x) or (bPosition.x > (playingField.x + playingField.width + 16)) then
   begin
     moveBullet := true;
   end
-  else  moveBullet := false;
+  else moveBullet := false;
 
 end;
 
