@@ -16,17 +16,13 @@ type
       sprite: TRectangle;
       iPosition: Point;
       iFollowing: Boolean;
-      speed: Real;
-      collision: TRectangle;
     
     public
       push, rotation, add: Real;
-      deleteMe: Boolean;
 
       constructor Create(itemId: Byte; origin: Point); overload;
 
       procedure followPlayer();
-      procedure Collect();
 
       property Position: Point read iPosition write iPosition;
       property Identifier: Byte read id write id;
@@ -38,8 +34,6 @@ type
 const
 
   spriteImageSize: Integer = 16;
-  MAX_POINT_VALUE: Integer = 10000;
-
 var 
   ItemSprites: array[0..4] of TRectangle;
   itemImage: TTexture;
@@ -62,7 +56,6 @@ begin
   
   push := 0;
   add := -2;
-  speed := 1.5;
 
   rotation := 0;
 end;
@@ -129,7 +122,7 @@ begin
 
     (* Delete uncatched items *)
 
-    if (itemManager[i].position.y > (playingField.y + playingField.height)) or itemManager[i].deleteMe then
+    if itemManager[i].position.y > (playingField.y + playingField.height) then
     begin
       itemManager.Delete(i);
       i -= 1;
@@ -160,42 +153,15 @@ procedure GameItem.followPlayer();
 var
   player, dir: Point;
   normal: Real;
-  playerCollision: TRectangle;
 begin
   player := GetPlayerPosition();  
-  normal := GetVectorMagnitude(PointCreate(player.x + playerSize / 2, player.y + playerSize / 2), PointCreate(iPosition.x, iPosition.y + push));
+  normal := GetVectorMagnitude(player, PointCreate(iPosition.x, iPosition.y + push));
 
-  dir := PointCreate((player.x + playerSize / 2 - iPosition.x) / normal, (player.y + playerSize / 2 - (iPosition.y + push)) / normal);
+  dir := PointCreate((player.x - iPosition.x) / normal, (player.y - iPosition.y) / normal);
 
-  iPosition.x += dir.x * speed;
-  iPosition.y += dir.y * speed;
+  iPosition.x += dir.x * 3;
+  iPosition.y += dir.y * 3;
 
-  playerCollision := GetPlayerCollision();
-  collision := RectangleCreate(iPosition.x, iPosition.y + push, 18, 18);
-
-  if CheckCollisionRecs(playerCollision, collision) then
-  begin
-    
-    Collect();
-    deleteMe := true;
-  end;
-
-end;
-
-procedure GameItem.Collect();
-var
-  positionPercentage: Real;
-begin
-  
-  case id of
-    1:
-    begin
-      
-      positionPercentage := 1 - (((GetPlayerPosition().y + playerSize / 2) - playingField.y) / playingField.height);
-      GiveScore(round(MAX_POINT_VALUE * positionPercentage));
-
-    end;
-  end;
 end;
 
 end.

@@ -16,6 +16,7 @@ type
       origin: Point;
       delay: Integer;
       counter: Integer;
+      mybullets: Integer;
 
     public
 
@@ -37,8 +38,19 @@ begin
   origin.x := origin.x + 13;
   origin.y := origin.y + 13;
 
-  delay := 8;
   counter := 0;
+  mybullets := 0;
+
+  case id of
+    0:
+    begin
+      delay := 8;
+    end;
+    1:
+    begin
+      delay := 5;
+    end;
+  end;
   
 end;
 
@@ -59,10 +71,28 @@ begin
         
         resetRandomSeed();
         c := ((player.x - origin.x) / abs(player.y - origin.y)) * 7;
-        CreateBullet(origin, 7, c + GetRandomValue(-3, 3));
+        CreateBullet(origin, 7, c + GetRandomValue(-3, 3), RED);
 
         counter := 0;
       end;
+    end;
+
+    1:
+    begin
+      
+      player := GetPlayerPosition();
+      if counter > delay then
+      begin
+        
+        c := ((player.x - origin.x) / abs(player.y - origin.y)) * 5;
+        CreateBullet(origin, 5 - (mybullets), c + mybullets, YELLOW);
+        mybullets += 1;
+
+        if (c + mybullets) > 5 then mybullets := -5;
+
+        counter := 0;
+      end;
+
     end;
   end;
 

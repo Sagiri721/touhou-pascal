@@ -42,6 +42,7 @@ var
     );
 
     loadBullet();
+    loadItemSprites();
 
     sizeAnim := 0;
     rotateAnim := 0;
@@ -50,12 +51,42 @@ var
 
   end;
 
+  function FormatScore(score: Integer) : String;
+  var
+    strVer: String;
+    zeroAmount, i: Integer;
+  begin
+    
+    strVer := IntToStr(score);
+    zeroAmount := 11 - length(strVer);
+
+    for i := 0 to zeroAmount - 1 do
+      strVer := '0' + strVer;
+
+    FormatScore := strVer;
+
+  end;
+
   procedure drawPlayer();
   var
     source: TRectangle; 
     dest: TRectangle;
-    
+    col: TColorB;
   begin
+
+    col := WHITE;
+    if player.iFraming then 
+    begin
+      
+      col.a := 127;
+      player.counter += 1;
+
+      if player.counter > 60 * 2 then
+      begin
+        player.iFraming := false;
+        player.counter := 0;
+      end;
+    end;
     
     source := RectangleCreate(0,0, 32, 32);
     dest := RectangleCreate(player.Position.x, player.Position.y, playerSize, playerSize);
@@ -67,7 +98,7 @@ var
       dest,
       Vector2Create(0,0),
       0,
-      WHITE
+      col
     );
 
     DrawEllipse(round(dest.x + (dest.width / 2) - 30 + sizeAnim * 1.5), round(dest.y + 10), 10, 10, RED);
@@ -103,15 +134,17 @@ begin
         Update(player, showCollision);
         drawBullets();
         DrawEnemies();
+        drawItems();
 
         DrawRectangle(0, 0, round(playingField.x), screenHeight, BLACK);
+        DrawRectangle(round(playingField.x), 0, round(playingField.width), round(playingField.y), BLACK);
         DrawRectangle(round(playingField.x + playingField.width), 0, 100, screenHeight, BLACK);
 
         drawPlayer();
 
         DrawText('HiScore  ', round(playingField.width + playingField.x + 20),  40, 20, WHITE);
 
-        text := concat('Score  ', IntToStr(player.Score));
+        text := concat('Score  ', FormatScore(player.Score));
         DrawText(PChar(text), round(playingField.width + playingField.x + 20),  70, 20, WHITE);
 
         DrawText('Player  ', round(playingField.width + playingField.x + 20), 120, 20, WHITE);
@@ -120,8 +153,12 @@ begin
         DrawText('Bombs  ', round(playingField.width + playingField.x + 20), 150, 20, WHITE);
         for i := 0 to player.Bombs-1 do DrawTexture(star, 80 + round(playingField.width + playingField.x + 20) + (25 * i), 150, BLUE);
 
-        DrawText(PChar('Power  ' + PChar(player.Power)), round(playingField.width + playingField.x + 20), 180, 20, WHITE);
-        DrawTexture(logo, round(playingField.width + playingField.x + 20), 270, WHITE);
+        text := concat('Power ', FloatToStr(player.Power), '/4.00');
+        DrawText(PChar(text), round(playingField.width + playingField.x + 20), 180, 20, WHITE);
+        text := concat('Graze ', IntToStr(player.Graze));
+        DrawText(PChar(text), round(playingField.width + playingField.x + 20), 210, 20, WHITE);
+
+        DrawTexture(logo, round(playingField.width + playingField.x + 20), 290, WHITE);
 
         if showCollision then
         begin

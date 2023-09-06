@@ -41,6 +41,7 @@
       <Unit>
         <Filename Value="input.pas"/>
         <IsPartOfProject Value="True"/>
+        <UnitName Value="Input"/>
       </Unit>
       <Unit>
         <Filename Value="bullet.pas"/>
@@ -56,6 +57,11 @@
         <Filename Value="spellcard.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="SpellCard"/>
+      </Unit>
+      <Unit>
+        <Filename Value="items.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="Items"/>
       </Unit>
     </Units>
   </ProjectOptions>

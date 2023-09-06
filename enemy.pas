@@ -10,7 +10,7 @@ interface
 }
 
 uses
-  Classes, SysUtils, raylib, fgl, Character, Bullet, SpellCard;
+  Classes, SysUtils, raylib, fgl, Character, Bullet, SpellCard, Items;
 
 type
 
@@ -29,6 +29,7 @@ type
       eCollisionMask: TRectangle;
 
       drawColor: TColorB;
+      eType: Byte;
 
     public
       attack: GameSpellCard;
@@ -52,6 +53,7 @@ type
       property Size: Real read eSize write eSize;
       property CollisionMask: TRectangle read eCollisionMask write eCollisionMask;
       property Color: TColorB read drawColor write drawColor;
+      property RewardType: Byte read etype write etype;
     
   end;
 
@@ -104,9 +106,13 @@ begin
       size := 1.3;
 
       attackTreshold := 60 * 3;
-      attack := GameSpellCard.Create(0, eTargetPosition);
+
+      resetRandomSeed();
+      eType := GetRandomValue(0, 1);
+      attack := GameSpellCard.Create(eType, eTargetPosition);
 
       attackEnd := 60 * 5;
+
       
     end;
   end;
@@ -147,7 +153,10 @@ begin
     if (enemyManager[i].hp <= 0) or enemyManager[i].deleteMe then
     begin
 
-      if not enemyManager[i].deleteMe then StartDeathEffect(enemyManager[i].position);
+      if not enemyManager[i].deleteMe then StartDeathEffect(enemyManager[i].position, enemyManager[i].rewardType);
+      (* Release items *)
+      CreateItems(enemyManager[i].RewardType, 1, enemyManager[i].position);
+
       enemyManager.Delete(i);
       i -= 1;
     end
